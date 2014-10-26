@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Theme options page for meta data, seo, social, analytics, webmaster tools, and more.
-	Version: 1.0.0
+	Version: 1.1.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,17 @@
 	add_action( 'add_meta_boxes', 'add_seo_meta' );
 	function add_seo_meta() {
 
-		$screens = array( 'post', 'page' );
+		$builtin = array(
+		    'post',
+		    'page'
+		);
+		$cpts = get_post_types( array(
+		    'public'   => true,
+		    '_builtin' => false
+		) );
+		$post_types = array_merge($builtin, $cpts);
+
+		$screens = $post_types;
 		foreach ( $screens as $screen ) {
 
 	    	add_meta_box(
@@ -26,8 +36,8 @@
 	    		__( 'SEO' ),
 	    		'seo_meta_cb',
 	    		$screen,
-	    		'normal',
-	    		'high'
+	    		'advanced',
+	    		'low'
 	    	);
 
 	    }
