@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Theme options page for meta data, seo, social, analytics, webmaster tools, and more.
-	Version: 1.1.0
+	Version: 1.2.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -538,27 +538,41 @@ function theme_options_do_page() {
 
 		//// seo
 		// get post/page meta_title if present or default
-		$meta_title = get_post_meta( $post->ID, '_seo_title', true );
-		if (!empty($meta_title)) {
-			echo "<title>" . $meta_title . "</title>";
+		if (is_single() || is_page()) {
+			$meta_title = get_post_meta( $post->ID, '_seo_title', true );
+			if (!empty($meta_title)) {
+				echo "<title>" . $meta_title . "</title>";
+			} else if (!empty($options['seo_site_title'])) {
+				echo "<title>" . $options['seo_site_title'] . "</title>";
+			} else {
+				echo "<title>" . get_the_title() . "</title>";
+			}
 		} else {
-			echo "<title>" . $options['seo_site_title'] . "</title>";
+			echo "<title>" . get_the_title() . "</title>";
 		}
 
 		// get post/page meta_keywords if present or default
-		$meta_keywords = get_post_meta( $post->ID, '_seo_keywords', true );
-		if (!empty($meta_keywords)) {
-			echo "<meta http-equiv='keywords' name='keywords' content='" . $meta_keywords . "'/>";
+		if (is_single() || is_page()) {
+			$meta_keywords = get_post_meta( $post->ID, '_seo_keywords', true );
+			if (!empty($meta_keywords)) {
+				echo "<meta name='keywords' content='" . $meta_keywords . "'>";
+			} else {
+				echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
+			}
 		} else {
-			echo "<meta http-equiv='keywords' name='keywords' content='" . $options['seo_site_keywords'] . "'/>";
+			echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
 		}
 
 		// get post/page meta_description if present or default
-		$meta_description = get_post_meta( $post->ID, '_seo_description', true );
-		if (!empty($meta_description)) {
-			echo "<meta http-equiv='description' content='" . $meta_description . "'/>";
+		if (is_single() || is_page()) {
+			$meta_description = get_post_meta( $post->ID, '_seo_description', true );
+			if (!empty($meta_description)) {
+				echo "<meta name='description' content='" . $meta_description . "'>";
+			} else {
+				echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
+			}
 		} else {
-			echo "<meta http-equiv='description' content='" . $options['seo_site_description'] . "'/>";
+			echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
 		}
 
 		// google webmaster tools
@@ -572,17 +586,25 @@ function theme_options_do_page() {
 		}
 
 		// get post/page meta_geolocation if present or default
-		$meta_geolocation = get_post_meta( $post->ID, '_seo_geolocation', true );
-		if (!empty($meta_geolocation)) {
-			echo $meta_geolocation;
+		if (is_single() || is_page()) {
+			$meta_geolocation = get_post_meta( $post->ID, '_seo_geolocation', true );
+			if (!empty($meta_geolocation)) {
+				echo $meta_geolocation;
+			} else {
+				echo $options['seo_site_geolocation'];
+			}
 		} else {
 			echo $options['seo_site_geolocation'];
 		}
 
 		// get post/page meta_extra if present or default
-		$meta_extra = get_post_meta( $post->ID, '_seo_extras', true );
-		if (!empty($meta_extra)) {
-			echo $meta_extra;
+		if (is_single() || is_page()) {
+			$meta_extra = get_post_meta( $post->ID, '_seo_extras', true );
+			if (!empty($meta_extra)) {
+				echo $meta_extra;
+			} else {
+				echo $options['seo_site_extra'];
+			}
 		} else {
 			echo $options['seo_site_extra'];
 		}
@@ -666,12 +688,14 @@ function theme_options_do_page() {
 		}
 
 		// 301 redirect
-		$meta_redirect = get_post_meta( $post->ID, 'seo_page_redirect', true );
-	    if (!empty($meta_redirect)) {
-	    	header('HTTP/1.1 301 Moved Permanently');
-			header('Location:' . $meta_redirect);
-			exit;
-	    }
+		if (is_single() || is_page()) {
+			$meta_redirect = get_post_meta( $post->ID, 'seo_page_redirect', true );
+		    if (!empty($meta_redirect)) {
+		    	header('HTTP/1.1 301 Moved Permanently');
+				header('Location:' . $meta_redirect);
+				exit;
+		    }
+		}
 
 		// google publisher url
 		if (!empty($options['gplus_publisher'])) {
@@ -679,18 +703,24 @@ function theme_options_do_page() {
 		}
 
 		// google author url
-		$seo_gplus_author = get_post_meta( $post->ID, '_seo_google_plus_author', true );
-		if (!empty($seo_gplus_author)) {
-			echo "<link href='" . $seo_gplus_author . "' rel='author'/>";
+		if (is_single() || is_page()) {
+			$seo_gplus_author = get_post_meta( $post->ID, '_seo_google_plus_author', true );
+			if (!empty($seo_gplus_author)) {
+				echo "<link href='" . $seo_gplus_author . "' rel='author'/>";
+			} else {
+				echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
+			}
 		} else {
 			echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
 		}
 
 		// get remarketing script if present
-		$remarketing = get_post_meta( $post->ID, '_seo_google_remarketing', true );
-	    if (!empty($remarketing)) {
-	    	echo $remarketing;
-	    }
+		if (is_single() || is_page()) {
+			$remarketing = get_post_meta( $post->ID, '_seo_google_remarketing', true );
+		    if (!empty($remarketing)) {
+		    	echo $remarketing;
+		    }
+		}
 
 	}
 	add_action( 'wp_head', 'seo_header' );
