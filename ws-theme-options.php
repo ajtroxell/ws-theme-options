@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Theme options page for meta data, seo, social, analytics, webmaster tools, and more.
-	Version: 1.2.0
+	Version: 1.3.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -536,191 +536,256 @@ function theme_options_do_page() {
 
 		$options = get_option('ws_theme_options');
 
-		//// seo
-		// get post/page meta_title if present or default
-		if (is_single() || is_page()) {
+		/* ===========================================================================
+		Declare variables
+		============================================================================== */
 			$meta_title = get_post_meta( $post->ID, '_seo_title', true );
-			if (!empty($meta_title)) {
-				echo "<title>" . $meta_title . "</title>";
-			} else if (!empty($options['seo_site_title'])) {
-				echo "<title>" . $options['seo_site_title'] . "</title>";
+			$meta_keywords = get_post_meta( $post->ID, '_seo_keywords', true );
+			$meta_description = get_post_meta( $post->ID, '_seo_description', true );
+			$meta_geolocation = get_post_meta( $post->ID, '_seo_geolocation', true );
+			$meta_extra = get_post_meta( $post->ID, '_seo_extras', true );
+			$meta_redirect = get_post_meta( $post->ID, 'seo_page_redirect', true );
+			$seo_gplus_author = get_post_meta( $post->ID, '_seo_google_plus_author', true );
+			$remarketing = get_post_meta( $post->ID, '_seo_google_remarketing', true );
+
+		/* ===========================================================================
+		SEO
+		============================================================================== */
+
+		/*	get post/page meta_title if present or default
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				if (!empty($options['seo_site_title'])) {
+					echo "<title>" . $options['seo_site_title'] . "</title>";
+				} else {
+					echo "<title>" . bloginfo('name') . "</title>";
+				}
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_title)) {
+					echo "<title>" . $meta_title . "</title>";
+				} else {
+					echo "<title>" . get_the_title() . "</title>";
+				}
 			} else {
 				echo "<title>" . get_the_title() . "</title>";
 			}
-		} else {
-			echo "<title>" . get_the_title() . "</title>";
-		}
 
-		// get post/page meta_keywords if present or default
-		if (is_single() || is_page()) {
-			$meta_keywords = get_post_meta( $post->ID, '_seo_keywords', true );
-			if (!empty($meta_keywords)) {
-				echo "<meta name='keywords' content='" . $meta_keywords . "'>";
+		/*	get post/page meta_keywords if present or default
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_keywords)) {
+					echo "<meta name='keywords' content='" . $meta_keywords . "'>";
+				} else {
+					echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
+				}
 			} else {
 				echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
 			}
-		} else {
-			echo "<meta name='keywords' content='" . $options['seo_site_keywords'] . "'>";
-		}
 
-		// get post/page meta_description if present or default
-		if (is_single() || is_page()) {
-			$meta_description = get_post_meta( $post->ID, '_seo_description', true );
-			if (!empty($meta_description)) {
-				echo "<meta name='description' content='" . $meta_description . "'>";
+		/*	get post/page meta_description if present or default
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_description)) {
+					echo "<meta name='description' content='" . $meta_description . "'>";
+				} else {
+					echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
+				}
 			} else {
 				echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
 			}
-		} else {
-			echo "<meta name='description' content='" . $options['seo_site_description'] . "'>";
-		}
 
-		// google webmaster tools
-		if (!empty($options['google_webmaster_tools'])) {
-			echo $options['google_webmaster_tools'];
-		}
+		/*	google webmaster tools
+		============================================================================== */
+			if (!empty($options['google_webmaster_tools'])) {
+				echo $options['google_webmaster_tools'];
+			}
 
-		// bing webmaster tools
-		if (!empty($options['bing_webmaster_tools'])) {
-			echo $options['bing_webmaster_tools'];
-		}
+		/*	bing webmaster tools
+		============================================================================== */
+			if (!empty($options['bing_webmaster_tools'])) {
+				echo $options['bing_webmaster_tools'];
+			}
 
-		// get post/page meta_geolocation if present or default
-		if (is_single() || is_page()) {
-			$meta_geolocation = get_post_meta( $post->ID, '_seo_geolocation', true );
-			if (!empty($meta_geolocation)) {
-				echo $meta_geolocation;
+		/*	get post/page meta_geolocation if present or default
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				echo $options['seo_site_geolocation'];
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_geolocation)) {
+					echo $meta_geolocation;
+				} else {
+					echo $options['seo_site_geolocation'];
+				}
 			} else {
 				echo $options['seo_site_geolocation'];
 			}
-		} else {
-			echo $options['seo_site_geolocation'];
-		}
 
-		// get post/page meta_extra if present or default
-		if (is_single() || is_page()) {
-			$meta_extra = get_post_meta( $post->ID, '_seo_extras', true );
-			if (!empty($meta_extra)) {
-				echo $meta_extra;
+		/*	get post/page meta_extra if present or default
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				echo $options['seo_site_extra'];
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_extra)) {
+					echo $meta_extra;
+				} else {
+					echo $options['seo_site_extra'];
+				}
 			} else {
 				echo $options['seo_site_extra'];
 			}
-		} else {
-			echo $options['seo_site_extra'];
-		}
 
-		// typography
-		if (!empty($options['typekit_id'])) {
-			echo "<script type='text/javascript' src='//use.typekit.net/" . $options['typekit_id'] . ".js'></script>";
-			echo "<script type='text/javascript'>try{Typekit.load();}catch(e){}</script>";
-		}
-		if (!empty($options['google_fonts'])) {
-			echo $options['google_fonts'];
-		}
-
-		// twitter card
-		$thumbnail = $options['icon144retina'];
-		$twitter = $options['twitter'];
-		if (!empty($twitter)) {
-		    echo "<meta name='twitter:card' content='summary'>";
-		    echo "<meta name='twitter:image' content='" . $thumbnail . "'>";
-		    echo "<meta name='twitter:site' content='@" . $twitter . "'>";
-		    echo "<meta name='twitter:creator' content='@" . $twitter . "'>";
-		}
-
-		// open graph
-		echo "<meta property='og:title' content='";
-			echo the_title();
-		echo "'/>";
-
-		echo "<meta property='og:description' content='" . the_excerpt_rss() . "' />";
-		echo "<meta property='og:url' content='";
-			echo the_permalink();
-		echo "'/>";
-
-		$fb_image = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID() ), 'thumbnail');
-
-		if (!empty($fb_image)) {
-		    echo "<meta property='og:image' content='" . $fb_image[0] . "' />";
-		} else {
-			echo "<meta property='og:image' content='" . $thumbnail . "' />";
-		}
-
-		echo "<meta property='og:type' content='";
-			if (is_single() || is_page()) {
-				echo 'article';
-			} else {
-				echo 'website';
+		/*	typography
+		============================================================================== */
+			if (!empty($options['typekit_id'])) {
+				echo "<script type='text/javascript' src='//use.typekit.net/" . $options['typekit_id'] . ".js'></script>";
+				echo "<script type='text/javascript'>try{Typekit.load();}catch(e){}</script>";
 			}
-		echo "/>";
+			if (!empty($options['google_fonts'])) {
+				echo $options['google_fonts'];
+			}
 
-		echo "<meta property='og:site_name' content='";
-			echo bloginfo('name');
-		echo "'/>";
+		/*	twitter card
+		============================================================================== */
+			$thumbnail = $options['icon144retina'];
+			$twitter = $options['twitter'];
+			if (!empty($twitter)) {
+			    echo "<meta name='twitter:card' content='summary'>";
+			    echo "<meta name='twitter:image' content='" . $thumbnail . "'>";
+			    echo "<meta name='twitter:site' content='@" . $twitter . "'>";
+			    echo "<meta name='twitter:creator' content='@" . $twitter . "'>";
+			}
 
-		// favicon
-		if (!empty($options['favicon'])) {
-			echo "<link rel='icon' type='image/ico' href='" . $options['favicon'] . "' />";
-		}
-		// icon144
-		if (!empty($options['icon144retina'])) {
-			echo "<link rel='apple-touch-icon' sizes='144x144' href='" . $options['icon144retina'] . "' />";
-		}
-		// icon114
-		if (!empty($options['icon114retina'])) {
-			echo "<link rel='apple-touch-icon' sizes='114x114' href='" . $options['icon114retina'] . "' />";
-		}
-		// icon72
-		if (!empty($options['icon72'])) {
-			echo "<link rel='apple-touch-icon' sizes='72x72' href='" . $options['icon72'] . "' />";
-		}
-		// icon57
-		if (!empty($options['icon57'])) {
-			echo "<link rel='apple-touch-icon' sizes='57x57' href='" . $options['icon57'] . "' />";
-		}
-		// windows icon
-		if (!empty($options['metro'])) {
-			echo "<meta name='msapplication-TileImage' content='" . $options['metro'] . "' />";
-		}
-		// windows icon bg
-		if (!empty($options['metrobg'])) {
-			echo "<meta name='msapplication-TileColor' content='" . $options['metrobg'] . "' />";
-		}
+		/*	open graph
+		============================================================================== */
+			// OG title
+			if (is_front_page() || is_home()) {
+				if (!empty($options['seo_site_title'])) {
+					echo "<meta property='og:title' content='" . $options['seo_site_title'] . "'/>";
+				} else {
+					echo "<meta property='og:title' content='" . get_the_title() . "'/>";
+				}
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_title)) {
+					echo "<meta property='og:title' content='" . $meta_title . "'/>";
+				} else {
+					echo "<meta property='og:title' content='" . get_the_title() . "'/>";
+				}
+			} else {
+				echo "<meta property='og:title' content='" . get_the_title() . "'/>";
+			}
 
-		// 301 redirect
-		if (is_single() || is_page()) {
-			$meta_redirect = get_post_meta( $post->ID, 'seo_page_redirect', true );
-		    if (!empty($meta_redirect)) {
-		    	header('HTTP/1.1 301 Moved Permanently');
-				header('Location:' . $meta_redirect);
-				exit;
-		    }
-		}
+			// OG description
+			if (is_front_page() || is_home()) {
+				echo "<meta property='og:description' content='" . $options['seo_site_description'] . "'/>";
+			} else if (is_single() || is_page()) {
+				if (!empty($meta_description)) {
+					echo "<meta property='og:description' content='" . $meta_description . "' />";
+				} else if (!empty($options['seo_site_description'])) {
+					echo "<meta property='og:description' content='" . $options['seo_site_description'] . "'/>";
+				} else {
+					echo "<meta property='og:description' content='" . the_excerpt_rss() . "'/>";
+				}
+			} else {
+				echo "<meta property='og:description' content='" . the_excerpt_rss() . "'/>";
+			}
 
-		// google publisher url
-		if (!empty($options['gplus_publisher'])) {
-			echo "<link href='" . $options['gplus_publisher'] . "' rel='publisher'/>";
-		}
+			// OG url
+			echo "<meta property='og:url' content='";
+				echo the_permalink();
+			echo "'/>";
 
-		// google author url
-		if (is_single() || is_page()) {
-			$seo_gplus_author = get_post_meta( $post->ID, '_seo_google_plus_author', true );
-			if (!empty($seo_gplus_author)) {
-				echo "<link href='" . $seo_gplus_author . "' rel='author'/>";
+			$fb_image = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID() ), 'thumbnail');
+
+			if (!empty($fb_image)) {
+			    echo "<meta property='og:image' content='" . $fb_image[0] . "' />";
+			} else {
+				echo "<meta property='og:image' content='" . $thumbnail . "' />";
+			}
+
+			echo "<meta property='og:type' content='";
+				if (is_single() || is_page()) {
+					echo 'article';
+				} else {
+					echo 'website';
+				}
+			echo "/>";
+
+			echo "<meta property='og:site_name' content='";
+				echo bloginfo('name');
+			echo "'/>";
+
+		/*	icons
+		============================================================================== */
+			// favicon
+			if (!empty($options['favicon'])) {
+				echo "<link rel='icon' type='image/ico' href='" . $options['favicon'] . "' />";
+			}
+			// icon144
+			if (!empty($options['icon144retina'])) {
+				echo "<link rel='apple-touch-icon' sizes='144x144' href='" . $options['icon144retina'] . "' />";
+			}
+			// icon114
+			if (!empty($options['icon114retina'])) {
+				echo "<link rel='apple-touch-icon' sizes='114x114' href='" . $options['icon114retina'] . "' />";
+			}
+			// icon72
+			if (!empty($options['icon72'])) {
+				echo "<link rel='apple-touch-icon' sizes='72x72' href='" . $options['icon72'] . "' />";
+			}
+			// icon57
+			if (!empty($options['icon57'])) {
+				echo "<link rel='apple-touch-icon' sizes='57x57' href='" . $options['icon57'] . "' />";
+			}
+			// windows icon
+			if (!empty($options['metro'])) {
+				echo "<meta name='msapplication-TileImage' content='" . $options['metro'] . "' />";
+			}
+			// windows icon bg
+			if (!empty($options['metrobg'])) {
+				echo "<meta name='msapplication-TileColor' content='" . $options['metrobg'] . "' />";
+			}
+
+		/*	301 redirect
+		============================================================================== */
+			if (is_single() || is_page()) {
+			    if (!empty($meta_redirect)) {
+			    	header('HTTP/1.1 301 Moved Permanently');
+					header('Location:' . $meta_redirect);
+					exit;
+			    }
+			}
+
+		/*	google publisher url
+		============================================================================== */
+			if (!empty($options['gplus_publisher'])) {
+				echo "<link href='" . $options['gplus_publisher'] . "' rel='publisher'/>";
+			}
+
+		/*	google author url
+		============================================================================== */
+			if (is_front_page() || is_home()) {
+				echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
+			} else if (is_single() || is_page()) {
+				if (!empty($seo_gplus_author)) {
+					echo "<link href='" . $seo_gplus_author . "' rel='author'/>";
+				} else {
+					echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
+				}
 			} else {
 				echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
 			}
-		} else {
-			echo "<link href='" . $options['gplus_author'] . "' rel='author'/>";
-		}
 
-		// get remarketing script if present
-		if (is_single() || is_page()) {
-			$remarketing = get_post_meta( $post->ID, '_seo_google_remarketing', true );
-		    if (!empty($remarketing)) {
-		    	echo $remarketing;
-		    }
-		}
+		/*	get remarketing script if present
+		============================================================================== */
+			if (is_single() || is_page()) {
+			    if (!empty($remarketing)) {
+			    	echo $remarketing;
+			    }
+			}
 
 	}
 	add_action( 'wp_head', 'seo_header' );
