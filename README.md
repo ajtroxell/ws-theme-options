@@ -1,32 +1,36 @@
 #WS Theme Options
 
-A simple theme (independent) options page to alleviate manual insertion of some common theme elements.
+Universal theme options providing advanced geolocation, icons, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
 
 ##Options
 
-- SEO
-    - Titles
-    - Keywords
-    - Descriptions
-    - Geolocation
-    - Extras such as robots, Googlebot, audience, or distribution.
+- General
+    - Admin Email
+    - Phone
+    - Fax
+    - Latitude
+    - Longitude
+    - Address
+    - Locality
+    - Region
+    - Postal Code
+    - Country
 - Icons
     - Favicon
     - iOS Icons
-- Social
-    - Twitter Username
-    - Google+ Publisher URL
-    - Google+ Author URL
+    - Windows Icons
 - Analytics
-    - Google Analytics Tracking Code
-- Webmaster Tools
-    - Google
-    - Bing
+    - Google Author URL
+    - Google Analytics
+    - Google Remarketing
 - Miscellaneous
     - TypeKit ID
     - Google Fonts
 
 ##Changelog
+###2.0.0
+- Core changed that negate almost all SEO related fields in favor of advanced geolocation fields and other basic options, in favor of being a companion to Wordpress SEO by Yoast.
+
 ###1.3.0
 - Added cases for is_home/is_front_page along with the previous is_single/is_page cases.
 

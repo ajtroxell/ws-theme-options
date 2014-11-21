@@ -1,3 +1,6 @@
+####2.0.0
+- Core changed that negate almost all SEO related fields in favor of advanced geolocation fields and other basic options, in favor of being a companion to Wordpress SEO by Yoast.
+
 ####1.3.0
 - Added cases for is_home/is_front_page along with the previous is_single/is_page cases.
 
