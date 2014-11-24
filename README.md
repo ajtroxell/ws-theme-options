@@ -1,6 +1,6 @@
 #WS Theme Options
 
-Universal theme options providing advanced geolocation, icons, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
+Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
 
 ##Options
 
@@ -19,6 +19,7 @@ Universal theme options providing advanced geolocation, icons, analytics, remark
     - Favicon
     - iOS Icons
     - Windows Icons
+    - Custom Wordpress Login and Admin Logos
 - Analytics
     - Google Author URL
     - Google Analytics
@@ -28,6 +29,9 @@ Universal theme options providing advanced geolocation, icons, analytics, remark
     - Google Fonts
 
 ##Changelog
+###2.1.0
+- Added custom login and admin logo fields.
+
 ###2.0.0
 - Core changed that negate almost all SEO related fields in favor of advanced geolocation fields and other basic options, in favor of being a companion to Wordpress SEO by Yoast.
 

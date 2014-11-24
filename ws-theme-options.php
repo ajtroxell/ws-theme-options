@@ -2,14 +2,15 @@
 	/*
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
-	Description: Universal theme options providing advanced geolocation, icons, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 2.0.0
+	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
+	Version: 2.1.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	Domain Path: /languages
 	Text Domain: ws-theme-options
 	Bitbucket Plugin URI: https://bitbucket.org/lrswebsolutions/ws-theme-options
+	Bitbucket Branch: master
 	*/
 
 	/* ===========================================================================
@@ -350,6 +351,16 @@
 													"Input" => "metrobg",
 													"Label" => "Win 8 Start Icon Background",
 													"Description" => "HEX value, e.g., #cc2127"
+												),
+												array(
+													"Input" => "wordpress_login_logo",
+													"Label" => "Wordpress Login Logo",
+													"Description" => "Dimensions: 84x84 pixels (168x168 for hi-dpi) | Replaces the default login logo."
+												),
+												array(
+													"Input" => "wordpress_admin_logo",
+													"Label" => "Wordpress Admin Logo",
+													"Description" => "Dimensions: 28x28 pixels (40x40 for hi-dpi) | Replaces the default admin logo."
 												)
 											);
 											foreach ( $images as $input ) {
@@ -408,7 +419,9 @@
 													$first = false;
 												} else {
 													echo "<tr valign='top'><th scope='row'><label for='ws_theme_options[".$input['Input']."]'>".$input['Label']."</label></th></tr><tr><td><textarea id='ws_theme_options[".$input['Input']."]'  name='ws_theme_options[".$input['Input']."]' rows='5' cols='50' class='large-text code'>";
-													echo esc_attr_e( $options[$input['Input']] );
+													if (!empty($options[$input['Input']])) {
+														echo esc_attr_e( $options[$input['Input']] );
+													}
 													echo "</textarea>";
 													if (!empty($input['Description'])) {
 														echo "<p class='description'>".$input['Description']."</p>";
@@ -482,6 +495,8 @@
 				$inputValidateArray["icon57"] = "icon57";
 				$inputValidateArray["metro"] = "metro";
 				$inputValidateArray["metrobg"] = "metrobg";
+				$inputValidateArray["wordpress_login_logo"] = "wordpress_login_logo";
+				$inputValidateArray["wordpress_admin_logo"] = "wordpress_admin_logo";
 				foreach( $inputValidateArray as $key => $value) {
 					$input[$value] = wp_filter_nohtml_kses( $input[$value] );
 				}
@@ -499,7 +514,6 @@
 				$inputValidateArray["country"] = "country";
 				$inputValidateArray["google_author"] = "google_author";
 				$inputValidateArray["google_remarketing"] = "google_remarketing";
-
 				$inputValidateArray["typekit_id"] = "typekit_id";
 				$inputValidateArray["google_fonts"] = "google_fonts";
 				foreach( $inputValidateArray as $key => $value) {
@@ -783,6 +797,16 @@
 			if (!empty($options['icon57'])) {
 				echo "<link rel='apple-touch-icon' sizes='57x57' href='" . $options['icon57'] . "' />";
 			}
+			// windows app title
+			$windows_app_title = get_bloginfo('name');
+			if (!empty($windows_app_title)) {
+				echo "<meta name='application-name' content='" . $windows_app_title . "' />";
+			}
+			// windows app description
+			$windows_app_description = get_bloginfo('description');
+			if (!empty($windows_app_description)) {
+				echo "<meta name='msapplication-tooltip' content='" . $windows_app_description . "' />";
+			}
 			// windows icon
 			if (!empty($options['metro'])) {
 				echo "<meta name='msapplication-TileImage' content='" . $options['metro'] . "' />";
@@ -791,7 +815,6 @@
 			if (!empty($options['metrobg'])) {
 				echo "<meta name='msapplication-TileColor' content='" . $options['metrobg'] . "' />";
 			}
-
 			// google author url
 			$google_author = get_post_meta( $post->ID, 'google_author', true );
 			if (is_front_page() || is_home()) {
@@ -809,7 +832,6 @@
 					echo "<link href='" . $options['google_author'] . "' rel='author'/>";
 				}
 			}
-
 			// get remarketing script if present
 			$google_remarketing = get_post_meta( $post->ID, 'google_remarketing', true );
 		    if (!empty($google_remarketing)) {
@@ -817,6 +839,28 @@
 		    }
 		}
 		add_action( 'wp_head', 'seo_header' );
+
+	/* ===========================================================================
+	Wordpress Logos
+	============================================================================== */
+	// wordpress login logo
+	$options = get_option('ws_theme_options');
+	$wordpress_login_logo = $options['wordpress_login_logo'];
+	$wordpress_admin_logo = $options['wordpress_admin_logo'];
+
+			if (!empty($wordpress_login_logo)) {
+				function custom_wordpress_login_logo() {
+					echo "<style type='text/css'>h1 a { background-image: url(" . $GLOBALS['wordpress_login_logo'] . ") !important; }</style>";
+				}
+				add_action('login_head', 'custom_wordpress_login_logo');
+			}
+			// wordpress admin logo
+			if (!empty($wordpress_admin_logo)) {
+				function custom_wordpress_admin_logo() {
+				   echo '<style type="text/css">#wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon:before { content: "" !important; } #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 20px; background-image: url(' . $GLOBALS['wordpress_admin_logo'] . ') !important; background-position: center 5px; background-repeat: no-repeat; background-size: 20px 20px; } @media screen and (max-width: 782px) { #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 52px; background-image: url(' . $GLOBALS['wordpress_admin_logo'] . ') !important; background-position: center 8px; background-size: 28px 28px; } }</style>';
+				}
+				add_action('wp_before_admin_bar_render', 'custom_wordpress_admin_logo');
+			}
 
 	/* ===========================================================================
 	Insert Values into Footer

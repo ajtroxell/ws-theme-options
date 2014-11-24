@@ -1,3 +1,6 @@
+####2.1.0
+- Added custom login and admin logo fields.
+
 ####2.0.0
 - Core changed that negate almost all SEO related fields in favor of advanced geolocation fields and other basic options, in favor of being a companion to Wordpress SEO by Yoast.
 
