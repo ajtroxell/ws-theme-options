@@ -1,3 +1,6 @@
+####2.1.1
+- Rewrote variable and option names, removed ancient code, and moved submenu item outside of Appearances.
+
 ####2.1.0
 - Added custom login and admin logo fields.
 
