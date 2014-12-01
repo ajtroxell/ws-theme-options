@@ -1,3 +1,6 @@
+####2.1.3
+- Corrected Wordpress logo functions and size on admin logo
+
 ####2.1.2
 - Corrected misspelling of variable for analytics
 

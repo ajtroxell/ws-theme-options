@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 2.1.2
+	Version: 2.1.3
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -368,7 +368,7 @@
 												array(
 													"Input" => "wsthemeoptions_wordpress_admin_logo",
 													"Label" => "Wordpress Admin Logo",
-													"Description" => "Dimensions: 28x28 pixels (40x40 for hi-dpi) | Replaces the default admin logo."
+													"Description" => "Dimensions: 20x20 pixels (40x40 for hi-dpi) | Replaces the default admin logo."
 												)
 											);
 											foreach ( $images as $input ) {
@@ -851,24 +851,26 @@
 	/* ===========================================================================
 	Wordpress Logos
 	============================================================================== */
-	// wordpress login logo
-	$options = get_option('wsthemeoptions');
-
+		// wordpress login logo
+		function custom_wordpress_login_logo() {
+			$options = get_option('wsthemeoptions');
+			$wsthemeoptions_wordpress_login_logo = $options['wsthemeoptions_wordpress_login_logo'];
 			if (!empty($wsthemeoptions_wordpress_login_logo)) {
-				$wsthemeoptions_wordpress_login_logo = $options['wsthemeoptions_wordpress_login_logo'];
-				function custom_wordpress_login_logo() {
-					echo "<style type='text/css'>h1 a { background-image: url(" . $GLOBALS['wsthemeoptions_wordpress_login_logo'] . ") !important; }</style>";
-				}
-				add_action('login_head', 'custom_wordpress_login_logo');
+
+				echo "<style type='text/css'>h1 a { background-image: url(" . $wsthemeoptions_wordpress_login_logo . ") !important; }</style>";
 			}
-			// wordpress admin logo
+		}
+		add_action('login_head', 'custom_wordpress_login_logo');
+
+		// wordpress admin logo
+		function custom_wordpress_admin_logo() {
+			$options = get_option('wsthemeoptions');
+			$wsthemeoptions_wordpress_admin_logo = $options['wsthemeoptions_wordpress_admin_logo'];
 			if (!empty($wsthemeoptions_wordpress_admin_logo)) {
-				$wsthemeoptions_wordpress_admin_logo = $options['wsthemeoptions_wordpress_admin_logo'];
-				function custom_wordpress_admin_logo() {
-				   echo '<style type="text/css">#wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon:before { content: "" !important; } #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 20px; background-image: url(' . $GLOBALS['wsthemeoptions_wordpress_admin_logo'] . ') !important; background-position: center 5px; background-repeat: no-repeat; background-size: 20px 20px; } @media screen and (max-width: 782px) { #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 52px; background-image: url(' . $GLOBALS['wsthemeoptions_wordpress_admin_logo'] . ') !important; background-position: center 8px; background-size: 28px 28px; } }</style>';
-				}
-				add_action('wp_before_admin_bar_render', 'custom_wordpress_admin_logo');
+			   echo '<style type="text/css">#wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon:before { content: "" !important; } #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 20px; background-image: url(' . $wsthemeoptions_wordpress_admin_logo . ') !important; background-position: center 5px; background-repeat: no-repeat; background-size: 20px 20px; } @media screen and (max-width: 782px) { #wpadminbar>#wp-toolbar>#wp-admin-bar-root-default li#wp-admin-bar-wp-logo .ab-icon { width: 52px; background-image: url(' . $wsthemeoptions_wordpress_admin_logo . ') !important; background-position: center 8px; background-size: 28px 28px; } }</style>';
 			}
+		}
+		add_action('wp_before_admin_bar_render', 'custom_wordpress_admin_logo');
 
 	/* ===========================================================================
 	Insert Values into Footer
