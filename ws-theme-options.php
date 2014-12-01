@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 2.1.1
+	Version: 2.1.2
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -874,7 +874,7 @@
 	Insert Values into Footer
 	============================================================================== */
 		function wsthemeoptions_footer() {
-			$options = get_option('wsthemeoptions_wsthemeoptions');
+			$options = get_option('wsthemeoptions');
 			// get google analytics code
 			if ($options['wsthemeoptions_google_analytics']) {
 				echo $options['wsthemeoptions_google_analytics'];

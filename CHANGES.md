@@ -1,3 +1,6 @@
+####2.1.2
+- Corrected misspelling of variable for analytics
+
 ####2.1.1
 - Rewrote variable and option names, removed ancient code, and moved submenu item outside of Appearances.
 
