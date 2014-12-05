@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
 	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 2.1.3
+	Version: 2.2.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -363,7 +363,7 @@
 												array(
 													"Input" => "wsthemeoptions_wordpress_login_logo",
 													"Label" => "Wordpress Login Logo",
-													"Description" => "Dimensions: 84x84 pixels (168x168 for hi-dpi) | Replaces the default login logo."
+													"Description" => "Dimensions: 168x168 pixels (336x336 for hi-dpi) | Replaces the default login logo."
 												),
 												array(
 													"Input" => "wsthemeoptions_wordpress_admin_logo",
@@ -857,7 +857,7 @@
 			$wsthemeoptions_wordpress_login_logo = $options['wsthemeoptions_wordpress_login_logo'];
 			if (!empty($wsthemeoptions_wordpress_login_logo)) {
 
-				echo "<style type='text/css'>h1 a { background-image: url(" . $wsthemeoptions_wordpress_login_logo . ") !important; }</style>";
+				echo "<style type='text/css'>h1 a { width: 168px !important; height: 168px !important;background-image: url(" . $wsthemeoptions_wordpress_login_logo . ") !important; background-size: 100% !important; }</style>";
 			}
 		}
 		add_action('login_head', 'custom_wordpress_login_logo');

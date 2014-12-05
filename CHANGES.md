@@ -1,3 +1,6 @@
+####2.2.0
+- Login logo size adjusted to support 168px width (336px hi-dpi) and 100% background size.
+
 ####2.1.3
 - Corrected Wordpress logo functions and size on admin logo
 
