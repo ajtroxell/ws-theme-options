@@ -1,151 +1,246 @@
 <?php
 	/*
 	Plugin Name: WS Theme Options
-	Plugin URI:	https://bitbucket.org/lrswebsolutions/ws-theme-options
+	Plugin URI:	https://github.com/ajtroxell/ws-theme-options
 	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 2.2.0
+	Version: 3.0.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	Domain Path: /languages
 	Text Domain: ws-theme-options
-	Bitbucket Plugin URI: https://bitbucket.org/lrswebsolutions/ws-theme-options
-	Bitbucket Branch: master
+	GitHub Plugin URI: https://bitbucket.org/lrswebsolutions/ws-theme-options
+	GitHub Branch: master
 	*/
 
 	/* ===========================================================================
 	Post/Page Custom Fields
 	============================================================================== */
-		add_action( 'add_meta_boxes', 'add_wsthemeoptions_meta' );
-		function add_wsthemeoptions_meta() {
+	function add_wsthemeoptions_post_meta() {
 
-			$builtin = array(
-			    'post',
-			    'page'
-			);
-			$cpts = get_post_types( array(
-			    'public'   => true,
-			    '_builtin' => false
-			) );
-			$post_types = array_merge($builtin, $cpts);
+		$builtin = array(
+		    'post',
+		    'page'
+		);
+		$cpts = get_post_types( array(
+		    'public'   => true,
+		    '_builtin' => false
+		) );
+		$post_types = array_merge($builtin, $cpts);
 
-			$screens = $post_types;
-			foreach ( $screens as $screen ) {
+		$screens = $post_types;
+		foreach ( $screens as $screen ) {
+	    	add_meta_box(
+	    		'wsthemeoptions-meta',
+	    		__( 'SEO Extras', 'ws-theme-options' ),
+	    		'wsthemeoptions_post_meta_callback',
+	    		$screen,
+	    		'advanced',
+	    		'low'
+	    	);
 
-		    	add_meta_box(
-		    		'wsthemeoptions-meta',
-		    		__( 'SEO Extras' ),
-		    		'wsthemeoptions_meta_cb',
-		    		$screen,
-		    		'advanced',
-		    		'low'
-		    	);
+	    }
+	}
+	add_action('add_meta_boxes', 'add_wsthemeoptions_post_meta');
 
-		    }
+	function wsthemeoptions_post_meta_callback( $post ) {
+		// Nonce to verify intention later
+	    wp_nonce_field( 'wsthemeoptions_post_meta', 'wsthemeoptions_post_meta_nonce' );
+
+		/*
+		* Use get_post_meta() to retrieve an existing value
+		* from the database and use the value for the form.
+		*/
+	    $wsthemeoptions_post_meta_email = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_email', true );
+	    $wsthemeoptions_post_meta_phone = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_phone', true );
+	    $wsthemeoptions_post_meta_fax = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_fax', true );
+	    $wsthemeoptions_post_meta_latitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_latitude', true );
+	    $wsthemeoptions_post_meta_longitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_longitude', true );
+	    $wsthemeoptions_post_meta_address = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_address', true );
+	    $wsthemeoptions_post_meta_locality = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_locality', true );
+	    $wsthemeoptions_post_meta_region = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_region', true );
+	    $wsthemeoptions_post_meta_postal_code = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_postal_code', true );
+	    $wsthemeoptions_post_meta_country = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_country', true );
+	    $wsthemeoptions_post_meta_google_author = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_author', true );
+	    $wsthemeoptions_post_meta_google_remarketing = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_remarketing', true );
+
+			echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_email">';
+			_e( 'Email', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_email" name="wsthemeoptions_post_meta_email" value="' . esc_attr( $wsthemeoptions_post_meta_email ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_phone">';
+			_e( 'Phone Number', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_phone" name="wsthemeoptions_post_meta_phone" value="' . esc_attr( $wsthemeoptions_post_meta_phone ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_fax">';
+			_e( 'Fax Number', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_fax" name="wsthemeoptions_post_meta_fax" value="' . esc_attr( $wsthemeoptions_post_meta_fax ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_latitude">';
+			_e( 'Latitude', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_latitude" name="wsthemeoptions_post_meta_latitude" value="' . esc_attr( $wsthemeoptions_post_meta_latitude ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_longitude">';
+			_e( 'Longitude', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_longitude" name="wsthemeoptions_post_meta_longitude" value="' . esc_attr( $wsthemeoptions_post_meta_longitude ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_address">';
+			_e( 'Address', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_address" name="wsthemeoptions_post_meta_address" value="' . esc_attr( $wsthemeoptions_post_meta_address ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_locality">';
+			_e( 'Locality', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_locality" name="wsthemeoptions_post_meta_locality" value="' . esc_attr( $wsthemeoptions_post_meta_locality ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_region">';
+			_e( 'Region', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_region" name="wsthemeoptions_post_meta_region" value="' . esc_attr( $wsthemeoptions_post_meta_region ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_postal_code">';
+			_e( 'Postal Code', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_postal_code" name="wsthemeoptions_post_meta_postal_code" value="' . esc_attr( $wsthemeoptions_post_meta_postal_code ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_country">';
+			_e( 'Country', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_country" name="wsthemeoptions_post_meta_country" value="' . esc_attr( $wsthemeoptions_post_meta_country ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_google_author">';
+			_e( 'Google Author', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_google_author" name="wsthemeoptions_post_meta_google_author" value="' . esc_attr( $wsthemeoptions_post_meta_google_author ) . '" size="25" />';
+			echo '</p>';
+
+		    echo '<p>';
+			echo '<label for="wsthemeoptions_post_meta_google_remarketing">';
+			_e( 'Google Remarketing', 'ws-theme-options' );
+			echo '</label>';
+			echo '<input class="widefat" type="text" id="wsthemeoptions_post_meta_google_remarketing" name="wsthemeoptions_post_meta_google_remarketing" value="' . esc_attr( $wsthemeoptions_post_meta_google_remarketing ) . '" size="25" />';
+			echo '</p>';
+	}
+
+	function wsthemeoptions_post_meta_data( $post_id ) {
+		// Check if our nonce is set.
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_nonce'] ) ) {
+			return;
+		}
+		// Verify that the nonce is valid.
+	    if ( ! wp_verify_nonce( $_POST['wsthemeoptions_post_meta_nonce'], 'wsthemeoptions_post_meta' ) ) {
+			return;
+		}
+		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
 		}
 
-		function wsthemeoptions_meta_cb( $post ) {
-		    $wsthemeoptions_email = get_post_meta( $post->ID, 'wsthemeoptions_email', true );
-		    $wsthemeoptions_phone = get_post_meta( $post->ID, 'wsthemeoptions_phone', true );
-		    $wsthemeoptions_fax = get_post_meta( $post->ID, 'wsthemeoptions_fax', true );
-		    $wsthemeoptions_latitude = get_post_meta( $post->ID, 'wsthemeoptions_latitude', true );
-		    $wsthemeoptions_longitude = get_post_meta( $post->ID, 'wsthemeoptions_longitude', true );
-		    $wsthemeoptions_address = get_post_meta( $post->ID, 'wsthemeoptions_address', true );
-		    $wsthemeoptions_locality = get_post_meta( $post->ID, 'wsthemeoptions_locality', true );
-		    $wsthemeoptions_region = get_post_meta( $post->ID, 'wsthemeoptions_region', true );
-		    $wsthemeoptions_postal_code = get_post_meta( $post->ID, 'wsthemeoptions_postal_code', true );
-		    $wsthemeoptions_country = get_post_meta( $post->ID, 'wsthemeoptions_country', true );
-		    $wsthemeoptions_google_author = get_post_meta( $post->ID, 'wsthemeoptions_google_author', true );
-		    $wsthemeoptions_google_remarketing = get_post_meta( $post->ID, 'wsthemeoptions_google_remarketing', true );
-
-		    // Nonce to verify intention later
-		    wp_nonce_field( 'save_wsthemeoptions_meta', 'wsthemeoptions_nonce' );
-		    ?>
-		    <p>
-		        <label for="email">Email</label>
-		        <input type="text" class="widefat" id="email" name="email" value="<?php echo $wsthemeoptions_email; ?>" />
-		    </p>
-		    <p>
-		        <label for="phone">Phone Number</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_phone; ?>" />
-		    </p>
-			<p>
-		        <label for="fax">Fax Number</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_fax; ?>" />
-		    </p>
-		    <p>
-		        <label for="latitude">Latitude</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_latitude; ?>" />
-		    </p>
-		    <p>
-		        <label for="longitude">Longitude</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_longitude; ?>" />
-		    </p>
-		    <p>
-		        <label for="address">Address</label>
-		        <input type="text" class="widefat" id="address" name="address" value="<?php echo $wsthemeoptions_address; ?>" />
-		    </p>
-		    <p>
-		        <label for="seo-locality">Locality</label>
-		        <input type="text" class="widefat" id="locality" name="locality" value="<?php echo $wsthemeoptions_locality; ?>" />
-		    </p>
-		    <p>
-		        <label for="region">Region</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_region; ?>" />
-		    </p>
-		    <p>
-		        <label for="postal_code">Postal Code</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_postal_code; ?>" />
-		    </p>
-		    <p>
-		        <label for="country">Country</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_country; ?>" />
-		    </p>
-		    <p>
-		        <label for="google_author">Google Author</label>
-		        <input type="text" class="widefat" id="phone" name="phone" value="<?php echo $wsthemeoptions_google_author; ?>" />
-		    </p>
-		    <p>
-		        <label for="google_remarketing">Google Remarketing</label>
-		        <textarea class="widefat" id="google_remarketing" name="google_remarketing" rows="3"><?php echo $wsthemeoptions_google_remarketing; ?></textarea>
-		    </p>
-		    <?php
+		// Check the user's permissions.
+		if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
+			if ( ! current_user_can( 'edit_page', $post_id ) ) {
+				return;
+			}
+		} else {
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
+				return;
+			}
 		}
 
-		add_action( 'save_post', 'wsthemeoptions_meta_save' );
+		// Make sure that it is set.
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_email'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_phone'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_fax'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_latitude'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_longitude'] ) ) {
+	        return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_address'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_locality'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_region'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_postal_code'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_country'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_google_author'] ) ) {
+	    	return;
+	    }
+	    if ( ! isset( $_POST['wsthemeoptions_post_meta_google_remarketing'] ) ) {
+	    	return;
+	    }
 
-		function wsthemeoptions_meta_save( $id ) {
-		    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	    // Sanitize user input.
+		$wsthemeoptions_post_meta_email_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_email'] );
+	    $wsthemeoptions_post_meta_phone_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_phone'] );
+	    $wsthemeoptions_post_meta_fax_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_fax'] );
+	    $wsthemeoptions_post_meta_latitude_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_latitude'] );
+	    $wsthemeoptions_post_meta_longitude_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_longitude'] );
+	    $wsthemeoptions_post_meta_address_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_address'] );
+	    $wsthemeoptions_post_meta_locality_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_locality'] );
+	    $wsthemeoptions_post_meta_region_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_region'] );
+	    $wsthemeoptions_post_meta_postal_code_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_postal_code'] );
+	    $wsthemeoptions_post_meta_country_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_country'] );
+	    $wsthemeoptions_post_meta_google_author_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_google_author'] );
+	    $wsthemeoptions_post_meta_google_remarketing_data  = sanitize_text_field( $_POST['wsthemeoptions_post_meta_google_remarketing'] );
 
-		    if( !isset( $_POST['wsthemeoptions_nonce'] ) || !wp_verify_nonce( $_POST['wsthemeoptions_nonce'], 'save_wsthemeoptions_meta' ) ) return;
-
-		    // if ( ! current_user_can( 'edit_post', $post->ID ) ) return;
-
-		    if( isset( $_POST['wsthemeoptions_email'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_email', esc_attr( strip_tags( $_POST['wsthemeoptions_email'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_phone'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_phone', esc_attr( strip_tags( $_POST['wsthemeoptions_phone'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_fax'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_fax', esc_attr( strip_tags( $_POST['wsthemeoptions_fax'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_latitude'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_latitude', esc_attr( strip_tags( $_POST['wsthemeoptions_latitude'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_longitude'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_longitude', esc_attr( strip_tags( $_POST['wsthemeoptions_longitude'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_address'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_address', esc_attr( strip_tags( $_POST['wsthemeoptions_address'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_locality'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_locality', esc_attr( strip_tags( $_POST['wsthemeoptions_locality'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_region'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_region', esc_attr( strip_tags( $_POST['wsthemeoptions_region'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_postal_code'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_postal_code', esc_attr( strip_tags( $_POST['wsthemeoptions_postal_code'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_country'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_country', esc_attr( strip_tags( $_POST['wsthemeoptions_country'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_google_author'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_google_author', esc_attr( strip_tags( $_POST['wsthemeoptions_google_author'] ) ) );
-		    if( isset( $_POST['wsthemeoptions_google_remarketing'] ) )
-		        update_post_meta( $id, 'wsthemeoptions_google_remarketing', esc_attr( strip_tags( $_POST['wsthemeoptions_google_remarketing'] ) ) );
-		}
+	    // Update the meta field in the database.
+		update_post_meta( $post_id, 'wsthemeoptions_post_meta_email', $wsthemeoptions_post_meta_email_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_phone', $wsthemeoptions_post_meta_phone_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_fax', $wsthemeoptions_post_meta_fax_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_latitude', $wsthemeoptions_post_meta_latitude_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_longitude', $wsthemeoptions_post_meta_longitude_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_address', $wsthemeoptions_post_meta_address_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_locality', $wsthemeoptions_post_meta_locality_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_region', $wsthemeoptions_post_meta_region_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_postal_code', $wsthemeoptions_post_meta_postal_code_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_country', $wsthemeoptions_post_meta_country_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_google_author', $wsthemeoptions_post_meta_google_author_data );
+	    update_post_meta( $post_id, 'wsthemeoptions_post_meta_google_remarketing', $wsthemeoptions_post_meta_google_remarketing_data );
+	}
+	add_action( 'save_post', 'wsthemeoptions_post_meta_data' );
 
 	/* ===========================================================================
 	Theme Options
@@ -539,7 +634,7 @@
 
 			$options = get_option('wsthemeoptions');
 
-			$wsthemeoptions_email = get_post_meta( $post->ID, 'wsthemeoptions_email', true );
+			$wsthemeoptions_email = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_email', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_email'])) {
 					echo "<meta property='og:email' content='".$options['wsthemeoptions_email']."' />";
@@ -556,7 +651,7 @@
 				}
 			}
 
-			$wsthemeoptions_phone = get_post_meta( $post->ID, 'wsthemeoptions_phone', true );
+			$wsthemeoptions_phone = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_phone', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_phone'])) {
 					echo "<meta property='og:phone_number' content='".$options['wsthemeoptions_phone']."' />";
@@ -573,7 +668,7 @@
 				}
 			}
 
-			$wsthemeoptions_fax = get_post_meta( $post->ID, 'wsthemeoptions_fax', true );
+			$wsthemeoptions_fax = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_fax', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_fax'])) {
 					echo "<meta property='og:fax_number' content='".$options['wsthemeoptions_fax']."' />";
@@ -590,7 +685,7 @@
 				}
 			}
 
-			$wsthemeoptions_latitude = get_post_meta( $post->ID, 'wsthemeoptions_latitude', true );
+			$wsthemeoptions_latitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_latitude', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_latitude'])) {
 					echo "<meta property='og:latitude' content='".$options['wsthemeoptions_latitude']."' />";
@@ -607,7 +702,7 @@
 				}
 			}
 
-			$wsthemeoptions_longitude = get_post_meta( $post->ID, 'wsthemeoptions_longitude', true );
+			$wsthemeoptions_longitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_longitude', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_longitude'])) {
 					echo "<meta property='og:longitude' content='".$options['wsthemeoptions_longitude']."' />";
@@ -624,7 +719,7 @@
 				}
 			}
 
-			$wsthemeoptions_address = get_post_meta( $post->ID, 'wsthemeoptions_address', true );
+			$wsthemeoptions_address = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_address', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_address'])) {
 					echo "<meta property='og:street-address' content='".$options['wsthemeoptions_address']."' />";
@@ -641,7 +736,7 @@
 				}
 			}
 
-			$wsthemeoptions_locality = get_post_meta( $post->ID, 'wsthemeoptions_locality', true );
+			$wsthemeoptions_locality = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_locality', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_locality'])) {
 					echo "<meta property='og:locality' content='".$options['wsthemeoptions_locality']."' />";
@@ -658,7 +753,7 @@
 				}
 			}
 
-			$wsthemeoptions_region = get_post_meta( $post->ID, 'wsthemeoptions_region', true );
+			$wsthemeoptions_region = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_region', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_region'])) {
 					echo "<meta property='og:region' content='".$options['wsthemeoptions_region']."' />";
@@ -675,7 +770,7 @@
 				}
 			}
 
-			$wsthemeoptions_postal_code = get_post_meta( $post->ID, 'wsthemeoptions_postal_code', true );
+			$wsthemeoptions_postal_code = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_postal_code', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_postal_code'])) {
 					echo "<meta property='og:postal-code' content='".$options['wsthemeoptions_postal_code']."' />";
@@ -692,7 +787,7 @@
 				}
 			}
 
-			$wsthemeoptions_country = get_post_meta( $post->ID, 'wsthemeoptions_country', true );
+			$wsthemeoptions_country = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_country', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_country'])) {
 					echo "<meta property='og:country-name' content='".$options['wsthemeoptions_country']."' />";
@@ -824,7 +919,7 @@
 				echo "<meta name='msapplication-TileColor' content='" . $options['wsthemeoptions_metrobg'] . "' />";
 			}
 			// google author url
-			$wsthemeoptions_google_author = get_post_meta( $post->ID, 'wsthemeoptions_google_author', true );
+			$wsthemeoptions_google_author = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_author', true );
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_google_author'])) {
 					echo "<link href='" . $options['wsthemeoptions_google_author'] . "' rel='author'/>";
@@ -841,7 +936,7 @@
 				}
 			}
 			// get remarketing script if present
-			$wsthemeoptions_google_remarketing = get_post_meta( $post->ID, 'wsthemeoptions_google_remarketing', true );
+			$wsthemeoptions_google_remarketing = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_remarketing', true );
 		    if (!empty($wsthemeoptions_google_remarketing)) {
 		    	echo $wsthemeoptions_google_remarketing;
 		    }

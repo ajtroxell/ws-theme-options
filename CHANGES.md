@@ -1,3 +1,6 @@
+####3.0.0
+- Rewrote all code for posts, pages, and custom post type fields.
+
 ####2.2.0
 - Login logo size adjusted to support 168px width (336px hi-dpi) and 100% background size.
 
