@@ -1,3 +1,6 @@
+####3.1.0
+- All post/page variables moved to single location for declaration and post ID conditional in place
+
 ####3.0.0
 - Rewrote all code for posts, pages, and custom post type fields.
 

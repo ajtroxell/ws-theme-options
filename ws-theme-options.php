@@ -3,7 +3,7 @@
 	Plugin Name: WS Theme Options
 	Plugin URI:	https://github.com/ajtroxell/ws-theme-options
 	Description: Universal theme options providing advanced geolocation, app icons, custom dashboard and login logos, analytics, remarketing, and web font fields sitewide and post/page specific. For use in addition to a full featured SEO plugin such as Wordpress SEO by Yoast.
-	Version: 3.0.0
+	Version: 3.1.0
 	Author: LRS Web Solutions/AJ Troxell
 	License: GNU General Public License v2
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -630,16 +630,37 @@
 	Insert Values into Header
 	============================================================================== */
 		function wsthemeoptions_header() {
+			// get global post & ID
 			global $post;
+			if (is_single() || is_singular() || is_page()) {
+				$id = $post->ID;
+			}
 
+			// get global theme options
 			$options = get_option('wsthemeoptions');
 
-			$wsthemeoptions_email = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_email', true );
+			// get post and page option variables
+			if (is_single() || is_singular() || is_page()) {
+				$wsthemeoptions_email = get_post_meta( $id, 'wsthemeoptions_post_meta_email', true );
+				$wsthemeoptions_phone = get_post_meta( $id, 'wsthemeoptions_post_meta_phone', true );
+				$wsthemeoptions_fax = get_post_meta( $id, 'wsthemeoptions_post_meta_fax', true );
+				$wsthemeoptions_latitude = get_post_meta( $id, 'wsthemeoptions_post_meta_latitude', true );
+				$wsthemeoptions_longitude = get_post_meta( $id, 'wsthemeoptions_post_meta_longitude', true );
+				$wsthemeoptions_address = get_post_meta( $id, 'wsthemeoptions_post_meta_address', true );
+				$wsthemeoptions_locality = get_post_meta( $id, 'wsthemeoptions_post_meta_locality', true );
+				$wsthemeoptions_region = get_post_meta( $id, 'wsthemeoptions_post_meta_region', true );
+				$wsthemeoptions_postal_code = get_post_meta( $id, 'wsthemeoptions_post_meta_postal_code', true );
+				$wsthemeoptions_country = get_post_meta( $id, 'wsthemeoptions_post_meta_country', true );
+				$wsthemeoptions_google_author = get_post_meta( $id, 'wsthemeoptions_post_meta_google_author', true );
+				$wsthemeoptions_google_remarketing = get_post_meta( $id, 'wsthemeoptions_post_meta_google_remarketing', true );
+			}
+
+			// og:email
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_email'])) {
 					echo "<meta property='og:email' content='".$options['wsthemeoptions_email']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_email)) {
 					echo "<meta property='og:email' content='".$wsthemeoptions_email."' />";
 				} else if (!empty($options['wsthemeoptions_email'])) {
@@ -650,13 +671,12 @@
 					echo "<meta property='og:email' content='".$options['email']."' />";
 				}
 			}
-
-			$wsthemeoptions_phone = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_phone', true );
+			// og:phone
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_phone'])) {
 					echo "<meta property='og:phone_number' content='".$options['wsthemeoptions_phone']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_phone)) {
 					echo "<meta property='og:phone_number' content='".$wsthemeoptions_phone."' />";
 				} else if (!empty($options['wsthemeoptions_phone'])) {
@@ -667,13 +687,12 @@
 					echo "<meta property='og:phone_number' content='".$options['wsthemeoptions_phone']."' />";
 				}
 			}
-
-			$wsthemeoptions_fax = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_fax', true );
+			// og:fax
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_fax'])) {
 					echo "<meta property='og:fax_number' content='".$options['wsthemeoptions_fax']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_fax)) {
 					echo "<meta property='og:fax_number' content='".$wsthemeoptions_fax."' />";
 				} else if (!empty($options['wsthemeoptions_fax'])) {
@@ -684,13 +703,12 @@
 					echo "<meta property='og:fax_number' content='".$options['wsthemeoptions_fax']."' />";
 				}
 			}
-
-			$wsthemeoptions_latitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_latitude', true );
+			// og:latitude
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_latitude'])) {
 					echo "<meta property='og:latitude' content='".$options['wsthemeoptions_latitude']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_latitude)) {
 					echo "<meta property='og:latitude' content='".$wsthemeoptions_latitude."' />";
 				} else if (!empty($options['wsthemeoptions_latitude'])) {
@@ -701,13 +719,12 @@
 					echo "<meta property='og:latitude' content='".$options['wsthemeoptions_latitude']."' />";
 				}
 			}
-
-			$wsthemeoptions_longitude = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_longitude', true );
+			// og:longitude
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_longitude'])) {
 					echo "<meta property='og:longitude' content='".$options['wsthemeoptions_longitude']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_longitude)) {
 					echo "<meta property='og:longitude' content='".$wsthemeoptions_longitude."' />";
 				} else if (!empty($options['wsthemeoptions_longitude'])) {
@@ -718,13 +735,12 @@
 					echo "<meta property='og:longitude' content='".$options['wsthemeoptions_longitude']."' />";
 				}
 			}
-
-			$wsthemeoptions_address = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_address', true );
+			// og:street
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_address'])) {
 					echo "<meta property='og:street-address' content='".$options['wsthemeoptions_address']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_address)) {
 					echo "<meta property='og:street-address' content='".$wsthemeoptions_address."' />";
 				} else if (!empty($options['wsthemeoptions_address'])) {
@@ -735,13 +751,12 @@
 					echo "<meta property='og:street-address' content='".$options['wsthemeoptions_address']."' />";
 				}
 			}
-
-			$wsthemeoptions_locality = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_locality', true );
+			// og:locality
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_locality'])) {
 					echo "<meta property='og:locality' content='".$options['wsthemeoptions_locality']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_locality)) {
 					echo "<meta property='og:locality' content='".$wsthemeoptions_locality."' />";
 				} else if (!empty($options['wsthemeoptions_locality'])) {
@@ -752,13 +767,12 @@
 					echo "<meta property='og:locality' content='".$options['wsthemeoptions_locality']."' />";
 				}
 			}
-
-			$wsthemeoptions_region = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_region', true );
+			// og:region
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_region'])) {
 					echo "<meta property='og:region' content='".$options['wsthemeoptions_region']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_region)) {
 					echo "<meta property='og:region' content='".$wsthemeoptions_region."' />";
 				} else if (!empty($options['wsthemeoptions_region'])) {
@@ -769,13 +783,12 @@
 					echo "<meta property='og:region' content='".$options['wsthemeoptions_region']."' />";
 				}
 			}
-
-			$wsthemeoptions_postal_code = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_postal_code', true );
+			// og:postal-code
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_postal_code'])) {
 					echo "<meta property='og:postal-code' content='".$options['wsthemeoptions_postal_code']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_postal_code)) {
 					echo "<meta property='og:postal-code' content='".$wsthemeoptions_postal_code."' />";
 				} else if (!empty($options['wsthemeoptions_postal_code'])) {
@@ -786,13 +799,12 @@
 					echo "<meta property='og:postal-code' content='".$options['wsthemeoptions_postal_code']."' />";
 				}
 			}
-
-			$wsthemeoptions_country = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_country', true );
+			// og:country
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_country'])) {
 					echo "<meta property='og:country-name' content='".$options['wsthemeoptions_country']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_country)) {
 					echo "<meta property='og:country-name' content='".$wsthemeoptions_country."' />";
 				} else if (!empty($options['wsthemeoptions_country'])) {
@@ -803,12 +815,12 @@
 					echo "<meta property='og:country-name' content='".$options['wsthemeoptions_country']."' />";
 				}
 			}
-
+			// icbm
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_latitude']) && !empty($options['wsthemeoptions_longitude'])) {
 					echo "<meta name='ICBM' content='".$options['wsthemeoptions_latitude'].",".$options['wsthemeoptions_longitude']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_latitude) && !empty($wsthemeoptions_longitude)) {
 					echo "<meta name='ICBM' content='".$wsthemeoptions_latitude.",".$wsthemeoptions_longitude."' />";
 				} else if (!empty($options['wsthemeoptions_latitude']) && !empty($options['wsthemeoptions_longitude'])) {
@@ -819,12 +831,12 @@
 					echo "<meta name='ICBM' content='".$options['wsthemeoptions_latitude'].",".$options['wsthemeoptions_longitude']."' />";
 				}
 			}
-
+			// geo.position
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_latitude']) && !empty($options['wsthemeoptions_longitude'])) {
 					echo "<meta name='geo.position' content='".$options['wsthemeoptions_latitude'].";".$options['wsthemeoptions_longitude']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_latitude) && !empty($wsthemeoptions_longitude)) {
 					echo "<meta name='geo.position' content='".$wsthemeoptions_latitude.";".$wsthemeoptions_longitude."' />";
 				} else if (!empty($options['wsthemeoptions_latitude']) && !empty($options['wsthemeoptions_longitude'])) {
@@ -835,12 +847,12 @@
 					echo "<meta name='geo.position' content='".$options['wsthemeoptions_latitude'].";".$options['wsthemeoptions_longitude']."' />";
 				}
 			}
-
+			// geo.placename
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_address']) && !empty($options['wsthemeoptions_locality']) && !empty($options['wsthemeoptions_region']) && !empty($options['wsthemeoptions_postal_code']) && !empty($options['wsthemeoptions_country'])) {
 					echo "<meta name='geo.placename' content='".$options['wsthemeoptions_address'].", ".$options['wsthemeoptions_locality'].", ".$options['wsthemeoptions_region'].$options['wsthemeoptions_postal_code'].", ".$options['wsthemeoptions_country']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_address) && !empty($wsthemeoptions_locality) && !empty($wsthemeoptions_region) && !empty($wsthemeoptions_postal_code) && !empty($wsthemeoptions_country)) {
 					echo "<meta name='geo.placename' content='".$wsthemeoptions_address.", ".$wsthemeoptions_locality.", ".$wsthemeoptions_region.$wsthemeoptions_postal_code.", ".$wsthemeoptions_country."' />";
 				} else if (!empty($options['wsthemeoptions_address']) && !empty($options['wsthemeoptions_locality']) && !empty($options['wsthemeoptions_region']) && !empty($options['wsthemeoptions_postal_code']) && !empty($options['wsthemeoptions_country'])) {
@@ -851,12 +863,12 @@
 					echo "<meta name='geo.placename' content='".$options['wsthemeoptions_address'].", ".$options['wsthemeoptions_locality'].", ".$options['wsthemeoptions_region'].$options['wsthemeoptions_postal_code'].", ".$options['wsthemeoptions_country']."' />";
 				}
 			}
-
+			// geo.region
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_country']) && !empty($options['wsthemeoptions_region'])) {
 					echo "<meta name='geo.region' content='".$options['wsthemeoptions_country']."-".$options['wsthemeoptions_region']."' />";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_country) && !empty($wsthemeoptions_region)) {
 					echo "<meta name='geo.region' content='".$wsthemeoptions_country."-".$wsthemeoptions_region."' />";
 				} else if (!empty($options['wsthemeoptions_country']) && !empty($options['wsthemeoptions_region'])) {
@@ -867,11 +879,10 @@
 					echo "<meta name='geo.region' content='".$options['wsthemeoptions_country']."-".$options['wsthemeoptions_region']."' />";
 				}
 			}
-
+			// dc.title
 			$wsthemeoptions_title = get_bloginfo('name');
 			echo "<meta name='DC.title' content='".$wsthemeoptions_title."' />";
-
-			// typography
+			// typography collections
 			if (!empty($options['wsthemeoptions_typekit_id'])) {
 				echo "<script type='text/javascript' src='//use.typekit.net/" . $options['wsthemeoptions_typekit_id'] . ".js'></script>";
 				echo "<script type='text/javascript'>try{Typekit.load();}catch(e){}</script>";
@@ -879,7 +890,6 @@
 			if (!empty($options['wsthemeoptions_google_fonts'])) {
 				echo $options['wsthemeoptions_google_fonts'];
 			}
-
 			// favicon
 			if (!empty($options['wsthemeoptions_favicon'])) {
 				echo "<link rel='icon' type='image/ico' href='" . $options['wsthemeoptions_favicon'] . "' />";
@@ -918,13 +928,12 @@
 			if (!empty($options['wsthemeoptions_metrobg'])) {
 				echo "<meta name='msapplication-TileColor' content='" . $options['wsthemeoptions_metrobg'] . "' />";
 			}
-			// google author url
-			$wsthemeoptions_google_author = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_author', true );
+			// google authorship url
 			if (is_front_page() || is_home()) {
 				if (!empty($options['wsthemeoptions_google_author'])) {
 					echo "<link href='" . $options['wsthemeoptions_google_author'] . "' rel='author'/>";
 				}
-			} else if (is_single() || is_page()) {
+			} else if (is_single() || is_singular() || is_page()) {
 				if (!empty($wsthemeoptions_google_author)) {
 					echo "<link href='" . $wsthemeoptions_google_author . "' rel='author'/>";
 				} else {
@@ -935,8 +944,7 @@
 					echo "<link href='" . $options['wsthemeoptions_google_author'] . "' rel='author'/>";
 				}
 			}
-			// get remarketing script if present
-			$wsthemeoptions_google_remarketing = get_post_meta( $post->ID, 'wsthemeoptions_post_meta_google_remarketing', true );
+			// google remarketing
 		    if (!empty($wsthemeoptions_google_remarketing)) {
 		    	echo $wsthemeoptions_google_remarketing;
 		    }
